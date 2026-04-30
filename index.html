@@ -5,101 +5,61 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <meta name="theme-color" content="#07070E"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
   <title>KrespoAi Production Hub</title>
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
   <style>
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
     html,body,#root{height:100%;background:#07070E;overflow:hidden;}
     body{color:#F2F2FF;font-family:'DM Sans',sans-serif;}
-    #splash{position:fixed;inset:0;background:#07070E;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:9999;}
-    .splash-logo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#F0A500,#E07800);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#000;font-family:'DM Sans',sans-serif;}
-    .splash-text{color:#525270;font-size:13px;font-family:'DM Sans',sans-serif;}
-    .spinner{width:20px;height:20px;border:2px solid rgba(240,165,0,.2);border-top:2px solid #F0A500;border-radius:50%;animation:spin .7s linear infinite;}
-    @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    #splash{position:fixed;inset:0;background:#07070E;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+    .logo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#F0A500,#E07800);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#000;}
+    .sp{color:#525270;font-size:13px;}
+    .spin{width:20px;height:20px;border:2px solid rgba(240,165,0,.2);border-top:2px solid #F0A500;border-radius:50%;animation:sp .7s linear infinite;}
+    @keyframes sp{to{transform:rotate(360deg)}}
   </style>
 </head>
 <body>
   <div id="splash">
-    <div class="splash-logo">K</div>
-    <div class="splash-text">KrespoAi Production Hub</div>
-    <div class="spinner"></div>
+    <div class="logo">K</div>
+    <p class="sp">KrespoAi Production Hub</p>
+    <div class="spin"></div>
   </div>
   <div id="root"></div>
 
+  <!-- Step 1: Load React synchronously from CDN -->
+  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/lucide-react@0.383.0/dist/umd/lucide-react.js"></script>
+
+  <!-- Step 2: Expose globals that compiled code needs -->
   <script>
-  // Load React and dependencies dynamically, then boot the app
-  function loadScript(src) {
-    return new Promise((resolve, reject) => {
-      const s = document.createElement('script');
-      s.src = src;
-      s.crossOrigin = 'anonymous';
-      s.onload = resolve;
-      s.onerror = reject;
-      document.head.appendChild(s);
-    });
-  }
-
-  async function boot() {
-    try {
-      await loadScript('https://unpkg.com/react@18.3.1/umd/react.production.min.js');
-      await loadScript('https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js');
-      await loadScript('https://unpkg.com/lucide-react@0.383.0/dist/umd/lucide-react.js');
-      startApp();
-    } catch(e) {
-      document.getElementById('splash').innerHTML = '<div style="color:#FF4444;text-align:center;padding:20px">Failed to load. Check your internet connection and refresh.</div>';
-    }
-  }
-
-  function startApp() {
-    // ── Unpack globals ────────────────────────────────────────
     var React = window.React;
     var ReactDOM = window.ReactDOM;
     var useState = React.useState;
     var useEffect = React.useEffect;
     var useCallback = React.useCallback;
     var useRef = React.useRef;
+    var BookOpen=LucideReact.BookOpen,Zap=LucideReact.Zap,Film=LucideReact.Film,
+    Briefcase=LucideReact.Briefcase,Heart=LucideReact.Heart,
+    LayoutDashboard=LucideReact.LayoutDashboard,Sparkles=LucideReact.Sparkles,
+    Download=LucideReact.Download,FileText=LucideReact.FileText,
+    Check=LucideReact.Check,X=LucideReact.X,ChevronLeft=LucideReact.ChevronLeft,
+    MoreHorizontal=LucideReact.MoreHorizontal,Eye=LucideReact.Eye,
+    EyeOff=LucideReact.EyeOff,LogOut=LucideReact.LogOut,Clock=LucideReact.Clock,
+    Trash2=LucideReact.Trash2,Search=LucideReact.Search,
+    AlertCircle=LucideReact.AlertCircle,Star=LucideReact.Star,
+    CreditCard=LucideReact.CreditCard,CheckCircle=LucideReact.CheckCircle,
+    ArrowRight=LucideReact.ArrowRight,Lock=LucideReact.Lock,
+    Receipt=LucideReact.Receipt,TrendingUp=LucideReact.TrendingUp,
+    Crown=LucideReact.Crown,ShoppingBag=LucideReact.ShoppingBag,
+    Upload=LucideReact.Upload,Flame=LucideReact.Flame,
+    BarChart2=LucideReact.BarChart2,Package=LucideReact.Package,
+    PlusCircle=LucideReact.PlusCircle,RefreshCw=LucideReact.RefreshCw,
+    Copy=LucideReact.Copy,User=LucideReact.User,Globe=LucideReact.Globe;
+  </script>
 
-    var _lucide = window.LucideReact;
-    var BookOpen = _lucide.BookOpen;
-    var Zap = _lucide.Zap;
-    var Film = _lucide.Film;
-    var Briefcase = _lucide.Briefcase;
-    var Heart = _lucide.Heart;
-    var LayoutDashboard = _lucide.LayoutDashboard;
-    var Sparkles = _lucide.Sparkles;
-    var Download = _lucide.Download;
-    var FileText = _lucide.FileText;
-    var Check = _lucide.Check;
-    var X = _lucide.X;
-    var ChevronLeft = _lucide.ChevronLeft;
-    var MoreHorizontal = _lucide.MoreHorizontal;
-    var Eye = _lucide.Eye;
-    var EyeOff = _lucide.EyeOff;
-    var LogOut = _lucide.LogOut;
-    var Clock = _lucide.Clock;
-    var Trash2 = _lucide.Trash2;
-    var Search = _lucide.Search;
-    var AlertCircle = _lucide.AlertCircle;
-    var Star = _lucide.Star;
-    var CreditCard = _lucide.CreditCard;
-    var CheckCircle = _lucide.CheckCircle;
-    var ArrowRight = _lucide.ArrowRight;
-    var Lock = _lucide.Lock;
-    var Receipt = _lucide.Receipt;
-    var TrendingUp = _lucide.TrendingUp;
-    var Crown = _lucide.Crown;
-    var ShoppingBag = _lucide.ShoppingBag;
-    var Upload = _lucide.Upload;
-    var Flame = _lucide.Flame;
-    var BarChart2 = _lucide.BarChart2;
-    var Package = _lucide.Package;
-    var PlusCircle = _lucide.PlusCircle;
-    var RefreshCw = _lucide.RefreshCw;
-    var Copy = _lucide.Copy;
-    var User = _lucide.User;
-    var Globe = _lucide.Globe;
-
+  <!-- Step 3: App code at TOP LEVEL (not inside any function) -->
+  <script>
 // KrespoAi compiled app
 // ── SUPABASE CONFIG ───────────────────────────────────────────────
 const SB_URL = "https://hpwlxdtqxtzbbhyjkwzi.supabase.co";
@@ -370,4 +330,15 @@ function OutputRenderer({ content }) {
                         React.createElement("span", { style: { ...T.label, color: C.gold, fontSize: 9 } }, isNumbered ? i + 1 : "•")),
                     React.createElement("p", { style: { ...T.body, color: C.sub, flex: 1 } }, renderInline(txt))));
             })));
-        /
+        // ALL CAPS section header
+        if (first === first.toUpperCase() && first.length > 3 && !/^\d/.test(first))
+            return (React.createElement("div", { key: bi, style: { paddingTop: 4 } },
+                React.createElement("div", { style: { ...T.label, color: C.gold, marginBottom: 10, paddingBottom: 6, borderBottom: "1px solid rgba(240,165,0,.15)" } }, first),
+                lines.slice(1).map((l, i) => React.createElement("p", { key: i, style: { ...T.body, color: C.sub } }, renderInline(l)))));
+        // Default paragraph
+        return (React.createElement("div", { key: bi, style: { display: "flex", flexDirection: "column", gap: 4 } }, lines.map((l, i) => React.createElement("p", { key: i, style: { ...T.body, color: C.sub } }, renderInline(l)))));
+    })));
+}
+// ── UI ATOMS ──────────────────────────────────────────────────────
+function Toast({ msg, type, onDone }) {
+    useEffect(() => { const t = setTimeout(onDone,
