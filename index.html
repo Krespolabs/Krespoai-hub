@@ -13,8 +13,9 @@
     body{color:#F2F2FF;font-family:'DM Sans',sans-serif;}
     .syne{font-family:'Syne',sans-serif;}
     .fu{display:flex;flex-direction:column;gap:0;}
-    input,textarea,select{outline:none;font-family:'DM Sans',sans-serif;color:#F2F2FF;}
+    input,textarea,select{outline:none;font-family:'DM Sans',sans-serif;color:#F2F2FF;background:transparent;}
     input::placeholder,textarea::placeholder{color:#525270;}
+    select option{background:#0D0D1A;color:#F2F2FF;}
     ::-webkit-scrollbar{width:3px;}
     ::-webkit-scrollbar-track{background:transparent;}
     ::-webkit-scrollbar-thumb{background:rgba(255,255,255,.07);border-radius:3px;}
@@ -23,9 +24,9 @@
     @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
     @keyframes confetti{0%{transform:translateY(0) rotate(0deg);opacity:1}100%{transform:translateY(-60px) rotate(720deg);opacity:0}}
-    #splash{position:fixed;inset:0;background:#07070E;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:9999;}
+    #splash{position:fixed;inset:0;background:#07070E;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;z-index:9999;transition:opacity .3s;}
     .s-logo{width:64px;height:64px;border-radius:18px;background:linear-gradient(135deg,#F0A500,#E07800);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#000;font-family:'DM Sans',sans-serif;}
-    .s-text{color:#525270;font-size:13px;}
+    .s-text{color:#525270;font-size:13px;font-family:'DM Sans',sans-serif;}
     .s-spin{width:20px;height:20px;border:2px solid rgba(240,165,0,.2);border-top:2px solid #F0A500;border-radius:50%;animation:spin .7s linear infinite;}
   </style>
 </head>
@@ -37,35 +38,65 @@
   </div>
   <div id="root"></div>
 
+  <!-- Only React from CDN — tiny ~40KB total -->
   <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/lucide-react@0.383.0/dist/umd/lucide-react.js"></script>
 
   <script>
-    /* Expose React hooks and Lucide icons as globals */
+    /* React globals */
     var useState=React.useState,useEffect=React.useEffect,
         useCallback=React.useCallback,useRef=React.useRef;
-    var BookOpen=LucideReact.BookOpen,Zap=LucideReact.Zap,
-        Film=LucideReact.Film,Briefcase=LucideReact.Briefcase,
-        Heart=LucideReact.Heart,LayoutDashboard=LucideReact.LayoutDashboard,
-        Sparkles=LucideReact.Sparkles,Download=LucideReact.Download,
-        FileText=LucideReact.FileText,Check=LucideReact.Check,
-        X=LucideReact.X,ChevronLeft=LucideReact.ChevronLeft,
-        MoreHorizontal=LucideReact.MoreHorizontal,Eye=LucideReact.Eye,
-        EyeOff=LucideReact.EyeOff,LogOut=LucideReact.LogOut,
-        Clock=LucideReact.Clock,Trash2=LucideReact.Trash2,
-        Search=LucideReact.Search,AlertCircle=LucideReact.AlertCircle,
-        Star=LucideReact.Star,CreditCard=LucideReact.CreditCard,
-        CheckCircle=LucideReact.CheckCircle,ArrowRight=LucideReact.ArrowRight,
-        Lock=LucideReact.Lock,Receipt=LucideReact.Receipt,
-        TrendingUp=LucideReact.TrendingUp,Crown=LucideReact.Crown,
-        ShoppingBag=LucideReact.ShoppingBag,Upload=LucideReact.Upload,
-        Flame=LucideReact.Flame,BarChart2=LucideReact.BarChart2,
-        Package=LucideReact.Package,PlusCircle=LucideReact.PlusCircle,
-        RefreshCw=LucideReact.RefreshCw,Copy=LucideReact.Copy,
-        User=LucideReact.User,Globe=LucideReact.Globe;
   </script>
 
+  <!-- Inline SVG icons — no CDN, instant load -->
+  <script>
+// Lightweight inline SVG icon components - replaces lucide-react CDN
+const _ic = (path, opts="") => ({size=16, color="currentColor", style:sx={}, fill="none"}) =>
+  React.createElement("svg",{width:size,height:size,viewBox:"0 0 24 24",fill:fill,
+    stroke:color,strokeWidth:2,strokeLinecap:"round",strokeLinejoin:"round",style:{flexShrink:0,...sx}},
+    React.createElement("g",{dangerouslySetInnerHTML:{__html:path}}));
+
+var BookOpen=_ic('<path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>');
+var Zap=_ic('<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>');
+var Film=_ic('<rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/>');
+var Briefcase=_ic('<rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>');
+var Heart=_ic('<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>');
+var LayoutDashboard=_ic('<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>');
+var Sparkles=_ic('<path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"/><path d="M5 3l.75 2.25L8 6l-2.25.75L5 9l-.75-2.25L2 6l2.25-.75z"/><path d="M19 13l.75 2.25L22 16l-2.25.75L19 19l-.75-2.25L16 16l2.25-.75z"/>');
+var Download=_ic('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>');
+var FileText=_ic('<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>');
+var Check=_ic('<polyline points="20 6 9 17 4 12"/>');
+var X=_ic('<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>');
+var ChevronLeft=_ic('<polyline points="15 18 9 12 15 6"/>');
+var MoreHorizontal=_ic('<circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/>');
+var Eye=_ic('<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>');
+var EyeOff=_ic('<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>');
+var LogOut=_ic('<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>');
+var Clock=_ic('<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>');
+var Trash2=_ic('<polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>');
+var Search=_ic('<circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>');
+var AlertCircle=_ic('<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>');
+var Star=({size=16,color="currentColor",fill="none",style:sx={}})=>React.createElement("svg",{width:size,height:size,viewBox:"0 0 24 24",fill:fill,stroke:color,strokeWidth:2,strokeLinecap:"round",strokeLinejoin:"round",style:{flexShrink:0,...sx}},React.createElement("polygon",{points:"12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"}));
+var CreditCard=_ic('<rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/>');
+var CheckCircle=_ic('<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>');
+var ArrowRight=_ic('<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>');
+var Lock=_ic('<rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>');
+var Receipt=_ic('<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1z"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="15" y2="13"/>');
+var TrendingUp=_ic('<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>');
+var Crown=_ic('<path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/><line x1="5" y1="20" x2="19" y2="20"/>');
+var ShoppingBag=_ic('<path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>');
+var Upload=_ic('<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>');
+var Flame=_ic('<path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z"/>');
+var BarChart2=_ic('<line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>');
+var Package=_ic('<line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>');
+var PlusCircle=_ic('<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>');
+var RefreshCw=_ic('<polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>');
+var Copy=_ic('<rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>');
+var User=_ic('<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>');
+var Globe=_ic('<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>');
+  </script>
+
+  <!-- KrespoAi App -->
   <script>
 // KrespoAi compiled app
 // ── SUPABASE CONFIG ───────────────────────────────────────────────
@@ -268,70 +299,4 @@ const useGen = (module, user, onCredit, onSave, onToast) => {
             }
         }
         finally {
-            setLd(false);
-        }
-    }, [user, module, onCredit, onSave, onToast]);
-    useEffect(() => () => { if (timerRef.current)
-        clearInterval(timerRef.current); }, []);
-    return { out, ld, err, rl, run, retry: () => setRl(null) };
-};
-// ── OUTPUT RENDERER ───────────────────────────────────────────────
-function renderInline(text) {
-    const parts = text.split(/(\*\*[^*]+\*\*|\*[^*]+\*|`[^`]+`)/g);
-    return parts.map((p, i) => {
-        if (p.startsWith("**") && p.endsWith("**"))
-            return React.createElement("strong", { key: i, style: { color: C.text, fontWeight: 700 } }, p.slice(2, -2));
-        if (p.startsWith("*") && p.endsWith("*") && p.length > 2)
-            return React.createElement("em", { key: i, style: { color: C.sub } }, p.slice(1, -1));
-        if (p.startsWith("`") && p.endsWith("`"))
-            return React.createElement("code", { key: i, style: { background: "rgba(255,255,255,.06)", padding: "1px 5px", borderRadius: 4, fontSize: 12, fontFamily: "monospace", color: C.cyan } }, p.slice(1, -1));
-        return p;
-    });
-}
-function OutputRenderer({ content }) {
-    if (!content)
-        return null;
-    const blocks = content.split(/\n{2,}/g).filter(Boolean);
-    return (React.createElement("div", { style: { display: "flex", flexDirection: "column", gap: 14 } }, blocks.map((block, bi) => {
-        const lines = block.split("\n").filter(Boolean);
-        if (!lines.length)
-            return null;
-        const first = lines[0];
-        // Heading detection
-        if (first.startsWith("### "))
-            return (React.createElement("div", { key: bi },
-                React.createElement("div", { className: "syne", style: { ...T.h3, color: C.sub, marginBottom: 6 } }, first.slice(4)),
-                lines.slice(1).map((l, i) => React.createElement("p", { key: i, style: { ...T.body, color: C.sub } }, renderInline(l)))));
-        if (first.startsWith("## "))
-            return (React.createElement("div", { key: bi },
-                React.createElement("div", { className: "syne", style: { ...T.h2, color: C.text, marginBottom: 8 } }, first.slice(3)),
-                lines.slice(1).map((l, i) => React.createElement("p", { key: i, style: { ...T.body, color: C.sub } }, renderInline(l)))));
-        if (first.startsWith("# "))
-            return (React.createElement("div", { key: bi, style: { paddingBottom: 12, borderBottom: "1px solid " + C.border } },
-                React.createElement("div", { className: "syne", style: { ...T.h1, color: C.text, marginBottom: 10 } }, first.slice(2)),
-                lines.slice(1).map((l, i) => React.createElement("p", { key: i, style: { ...T.body, color: C.sub } }, renderInline(l)))));
-        // Bullet / numbered list
-        const isBullet = lines.every(l => /^[-•*]\s/.test(l));
-        const isNumbered = lines.every(l => /^\d+[.)]\s/.test(l));
-        if (isBullet || isNumbered)
-            return (React.createElement("div", { key: bi, style: { display: "flex", flexDirection: "column", gap: 6 } }, lines.map((l, i) => {
-                const txt = l.replace(/^[-•*\d+.)\s]+/, "");
-                return (React.createElement("div", { key: i, style: { display: "flex", gap: 10, alignItems: "flex-start" } },
-                    React.createElement("div", { style: { width: 18, height: 18, borderRadius: 5, background: C.goldDim, border: "1px solid " + C.borderGold, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, marginTop: 2 } },
-                        React.createElement("span", { style: { ...T.label, color: C.gold, fontSize: 9 } }, isNumbered ? i + 1 : "•")),
-                    React.createElement("p", { style: { ...T.body, color: C.sub, flex: 1 } }, renderInline(txt))));
-            })));
-        // ALL CAPS section header
-        if (first === first.toUpperCase() && first.length > 3 && !/^\d/.test(first))
-            return (React.createElement("div", { key: bi, style: { paddingTop: 4 } },
-                React.createElement("div", { style: { ...T.label, color: C.gold, marginBottom: 10, paddingBottom: 6, borderBottom: "1px solid rgba(240,165,0,.15)" } }, first),
-                lines.slice(1).map((l, i) => React.createElement("p", { key: i, style: { ...T.body, color: C.sub } }, renderInline(l)))));
-        // Default paragraph
-        return (React.createElement("div", { key: bi, style: { display: "flex", flexDirection: "column", gap: 4 } }, lines.map((l, i) => React.createElement("p", { key: i, style: { ...T.body, color: C.sub } }, renderInline(l)))));
-    })));
-}
-// ── UI ATOMS ──────────────────────────────────────────────────────
-function Toast({ msg, type, onDone }) {
-    useEffect(() => { const t = setTimeout(onDone, 3200); return () => clearTimeout(t); }, [onDone]);
-    const colors = { success: C.green, error: C.red, info: C.cyan };
-    return (React.createElement("div", { style: { position: "fixed", bottom: 90, left: "50%", transform: "translateX(-50%)", zIndex: 999, background: C.card2, border: "1px solid " + (colors[type] || C.border), borderRadius: 12, padding: "12px 18px", display: "flex", alignItems: "center", gap: 10, boxShadow: "0 8px 32px 
+            setLd(fals
