@@ -2,7 +2,22 @@
   "name": "krespoai-hub",
   "version": "1.0.0",
   "type": "module",
-  "scripts": { "build": "vite build", "dev": "vite" },
-  "dependencies": { "react": "^18.3.1", "react-dom": "^18.3.1", "lucide-react": "^0.383.0" },
-  "devDependencies": { "vite": "^5.4.0", "@vitejs/plugin-react": "^4.3.0" }
+  "scripts": {
+    "test": "node --import tsx --test tests/App.test.jsx",
+    "build": "vite build",
+    "dev": "vite"
+  },
+  "dependencies": {
+    "lucide-react": "^0.383.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@vitejs/plugin-react": "^4.3.0",
+    "jsdom": "^25.0.1",
+    "tsx": "^4.23.15",
+    "vite": "^5.4.0"
+  }
 }
