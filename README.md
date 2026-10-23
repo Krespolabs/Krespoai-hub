@@ -14,7 +14,7 @@ This README describes the code in this repository; it does not claim a currently
 ## Tech stack
 
 - React 18 and JavaScript/JSX
-- Vite 5
+- Vite 6
 - Supabase client calls implemented with `fetch`
 - Vercel rewrite configuration in `vercel.json`
 
